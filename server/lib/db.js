@@ -37,6 +37,9 @@ await Promise.all([
       unique: true,
     },
   ]),
+  db.collection('market').createIndexes([
+    { key: { timestamp: 1 }, background: true, expireAfterSeconds: 10 * 60 }, // 10 mins
+  ]),
 ]);
 
 export default db;

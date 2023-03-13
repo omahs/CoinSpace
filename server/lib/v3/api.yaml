@@ -552,6 +552,28 @@ paths:
                 $ref: '#/components/schemas/TickerList'
         default:
           $ref: '#/components/responses/GeneralError'
+  /market:
+    get:
+      x-eov-operation-id: getMarketData
+      x-eov-operation-handler: handlers
+      description: Get market data for crypto
+      parameters:
+        - $ref: '#/components/parameters/deviceId'
+        - $ref: '#/components/parameters/cryptoId'
+        - $ref: '#/components/parameters/currency'
+        - $ref: '#/components/parameters/interval'
+      security:
+        - deviceSignature: []
+      responses:
+        '200':
+          description: Market data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/MarketData'
+        default:
+          $ref: '#/components/responses/GeneralError'
+
   /fees:
     get:
       x-eov-operation-id: getFees
@@ -1335,6 +1357,24 @@ components:
       maxItems: 1000
       items:
         $ref: '#/components/schemas/Ticker'
+    Currency:
+      type: string
+      enum: [ars, aud, brl, cad, chf, cny, dkk, eur, gbp, idr, ils, jpy, mxn, nok, nzd, php, pln, rub, sek, sgd, try, uah, usd, zar]
+    Interval:
+      type: string
+      enum: [1d, 7d, 1m, 3m, 1y, all]
+    MarketData:
+      type: object
+      additionalProperties: false
+      properties:
+        prices:
+          type: array
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items:
+              type: number
     Fee:
       type: object
       additionalProperties: false
@@ -1639,6 +1679,20 @@ components:
       allowReserved: true
       schema:
         $ref: '#/components/schemas/CryptoIdList'
+    currency:
+      in: query
+      name: currency
+      required: true
+      description: Fiat currency code
+      schema:
+        $ref: '#/components/schemas/Currency'
+    interval:
+      in: query
+      name: interval
+      required: true
+      description: Dates interval
+      schema:
+        $ref: '#/components/schemas/Interval'
     amount:
       in: query
       name: amount

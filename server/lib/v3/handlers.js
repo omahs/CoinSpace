@@ -6,6 +6,7 @@ import fee from '../fee.js';
 import csFee from '../csFee.js';
 import mecto from '../mecto.js';
 import storage from '../storage.js';
+import market from '../market.js';
 import moonpay from '../moonpay.js';
 import openalias from '../openalias.js';
 import domain from '../domain.js';
@@ -247,6 +248,11 @@ export async function getTickers(req, res) {
 export async function getTickersPublic(req, res) {
   const tickers = await cryptos.getTickersPublic(req.query.crypto);
   res.status(200).send(tickers);
+}
+
+export async function getMarketData(req, res) {
+  const marketData = await market.getMarketData(req.query.crypto, req.query.currency, req.query.interval);
+  res.status(200).send(marketData);
 }
 
 export async function getFees(req, res) {
