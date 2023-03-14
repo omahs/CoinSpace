@@ -14,6 +14,14 @@ const DAYS_MAP ={
   '1y': 365,
   all: 'max',
 };
+const EXPIRE_MAP = {
+  '1d': 10 * 60 * 1000,
+  '7d': 60 * 60 * 1000,
+  '1m': 2 * 60 * 60 * 1000,
+  '3m': 2 * 60 * 60 * 1000,
+  '1y': 12 * 60 * 60 * 1000,
+  all: 12 * 60 * 60 * 1000,
+};
 
 async function _getMarketData(crypto, currency, interval) {
   const id = `${crypto.coingecko.id}-${currency}-${interval}`;
@@ -39,7 +47,7 @@ async function _getMarketData(crypto, currency, interval) {
     .insertOne({
       _id: id,
       prices: data.prices,
-      timestamp: new Date(),
+      expireAt: new Date(Date.now() + EXPIRE_MAP[interval]),
     });
   return {
     prices: data.prices,

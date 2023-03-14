@@ -38,7 +38,7 @@ await Promise.all([
     },
   ]),
   db.collection('market').createIndexes([
-    { key: { timestamp: 1 }, background: true, expireAfterSeconds: 10 * 60 }, // 10 mins
+    { key: { expireAt: 1 }, background: true, expireAfterSeconds: 0 },
   ]),
 ]);
 

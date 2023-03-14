@@ -9,7 +9,12 @@ const coingecko = axios.create({
 
 axiosRetry(coingecko, {
   retries: 3,
-  retryDelay: () => 30 * 1000,
+  retryDelay: (retryCount, err) => {
+    if (err?.response?.headers['retry-after']) {
+      return err.response.headers['retry-after'] * 1000;
+    }
+    return 30 * 1000;
+  },
   retryCondition: (err) => {
     return axiosRetry.isNetworkOrIdempotentRequestError(err) || (err.response && err.response.status === 429);
   },
@@ -17,9 +22,9 @@ axiosRetry(coingecko, {
 });
 
 rateLimit(coingecko, {
-  maxRequests: 100,
-  // per minute
-  perMilliseconds: 60 * 1000,
+  maxRequests: 15,
+  // 2 min
+  perMilliseconds: 2 * 60 * 1000,
 });
 
 export default coingecko;
